@@ -25,13 +25,13 @@ $(document).ready(function() {
 
     //test only (need to remove)
 
-    home.showHomePage()
-    getAssignedProjects( 1 )
+    // home.showHomePage()
+    // getAssignedProjects( 1 )
 
     //end of test 
 
     //
-    // login.showLoginForm();
+    login.showLoginForm();
 
     $("#login_form").submit( function(e) {
         e.preventDefault();
