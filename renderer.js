@@ -19,6 +19,7 @@ var activity_id = 0
 var user_id = 0
 var timer_status = 'stop'
 var total_seconds = 0
+var timer 
 
 $(document).ready(function() {
 
@@ -59,31 +60,28 @@ $(document).ready(function() {
 
         timer_status = 'start'
         // createActivity()
-        var timer = setInterval(timerTick(), 1000)
-        
+        timer = setInterval(timerTick(), 1000)
         $('.btn-stop').prop('disabled', false)
         $('.btn-pause').prop('disabled', false)
         $('.btn-start').prop('disabled', true)
-
-        $('.btn-stop').click( function() {
-            timer_status = 'stop'
-            // endAcitvity()
-            clearInterval(timer)
-            $('.btn-stop').prop('disabled', true)
-            $('.btn-pause').prop('disabled', true)
-            $('.btn-start').prop('disabled', false)
-        })
-    
-        $('.btn-pause').click( function() {
-            timer_status = 'pause'
-            clearInterval(timer)
-            $('.btn-stop').prop('disabled', true)
-            $('.btn-pause').prop('disabled', true)
-            $('.btn-start').prop('disabled', false)
-        })
     })
 
-    
+    $('.btn-stop').click( function() {
+        timer_status = 'stop'
+        // endActivity()
+        clearInterval(timer)
+        $('.btn-stop').prop('disabled', true)
+        $('.btn-pause').prop('disabled', true)
+        $('.btn-start').prop('disabled', false)
+    })
+
+    $('.btn-pause').click( function() {
+        timer_status = 'pause'
+        clearInterval(timer)
+        $('.btn-stop').prop('disabled', true)
+        $('.btn-pause').prop('disabled', true)
+        $('.btn-start').prop('disabled', false)
+    })
 
     $("#captureScreens").click(function() {
         let date_ = new Date();
@@ -196,6 +194,7 @@ function getTaskInfo( task_id ) {
 }
 
 function timerTick() {
+    alert();
     ++total_seconds;
     let current_time = (
         pad(parseInt(total_seconds / 60/ 60)) + ':' +
