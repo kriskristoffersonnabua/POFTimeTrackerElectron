@@ -6,6 +6,7 @@ const $ = require('jquery')
 const path = require('path')
 const screenshot = require('screenshot-desktop')
 const superagent = require('superagent');
+const fs = require('fs');
 const login = require('./src/Login.js')
 const home = require('./src/Home.js')
 const user = require('./src/User.js')
@@ -20,18 +21,19 @@ var user_id = 0
 var timer_status = 'stop'
 var total_seconds = 0
 var timer 
+var capture_timer 
 
 $(document).ready(function() {
 
     //test only (need to remove)
 
-    // home.showHomePage()
-    // getAssignedProjects( 1 )
+    home.showHomePage()
+    getAssignedProjects( 1 )
 
     //end of test 
 
     //
-    login.showLoginForm();
+    // login.showLoginForm();
 
     $("#login_form").submit( function(e) {
         e.preventDefault();
@@ -59,8 +61,16 @@ $(document).ready(function() {
         }
 
         timer_status = 'start'
-        // createActivity()
-        timer = setInterval(timerTick(), 1000)
+        createActivity()
+        timer = setInterval(() => {
+            timerTick();
+        }, 1000);
+
+        capture_timer = setInterval(() => {
+            let date_ = new Date();
+            screenshot({ filename: path.join(__dirname, 'screenshots', 'act_' + activity_id , date_.getTime() + ".png") })
+        }, 50000);
+
         $('.btn-stop').prop('disabled', false)
         $('.btn-pause').prop('disabled', false)
         $('.btn-start').prop('disabled', true)
@@ -68,7 +78,7 @@ $(document).ready(function() {
 
     $('.btn-stop').click( function() {
         timer_status = 'stop'
-        // endActivity()
+        endActivity()
         clearInterval(timer)
         $('.btn-stop').prop('disabled', true)
         $('.btn-pause').prop('disabled', true)
@@ -82,11 +92,6 @@ $(document).ready(function() {
         $('.btn-pause').prop('disabled', true)
         $('.btn-start').prop('disabled', false)
     })
-
-    $("#captureScreens").click(function() {
-        let date_ = new Date();
-        screenshot({ filename: path.join(__dirname, 'screenshots', date_.getTime() + ".png") })
-    });
 });
 
 function getUser( user_id ) {
@@ -194,10 +199,9 @@ function getTaskInfo( task_id ) {
 }
 
 function timerTick() {
-    alert();
     ++total_seconds;
     let current_time = (
-        pad(parseInt(total_seconds / 60/ 60)) + ':' +
+        pad(parseInt(total_seconds / 60 / 60)) + ':' +
         pad(parseInt(total_seconds / 60)) + ':' +
         pad(total_seconds % 60)
     )
@@ -223,10 +227,18 @@ function createActivity() {
     //     .end(function (err, res) {
 
     //         activity_id = res.body.actvity_id
+
+                let activity_folder = path.join(__dirname, 'screenshots', 'act_' + activity_id )
+
+                if (!fs.existsSync(activity_folder)) { 
+                    fs.mkdir(activity_folder, function(err, data) {
+                        if( err ) console.log( err )
+                    });
+                }
     // });
 }
 
-function endAcitvity() {
+function endActivity() {
     superagent
         .get(API_URL + 'api/end_activity')
         .send('activity_id', activity_id ) // sends a JSON post body
@@ -239,13 +251,24 @@ function endAcitvity() {
 }
 
 function uploadScreenShots() {
-    // superagent
-    //     .get(API_URL + 'api/ecnd_activity')
-    //     .send('activity_id', activity_id ) // sends a JSON post body
-    //     .send('time_consumed', $('#time').html() ) // sends a JSON post body
-    //     .set('accept', 'json')
-    //     .end(function (err, res) {
 
-            
-    // });
+    let activity_folder = path.join(__dirname, 'screenshots', 'act_' + activity_id )
+
+    fs.readDir(activity_folder, function(dir) {
+        // es6
+        for(let filePath of dir) {
+          
+            // superagent
+            //     .get(API_URL + 'api/upload_screenshot')
+            //     .send('activity_id', activity_id ) // sends a JSON post body
+            //     .attach('screenshot', filePath )
+            //     .set('accept', 'json')
+            //     .end(function (err, res) {
+                    
+            // });
+
+        }
+    });
+
+    
 }
