@@ -9,8 +9,8 @@ const url = require('url')
 let mainWindow
 
 //set global variables 
-global.API_URL = "http://timetracker.local/"
-global.user = []
+global.API_URL = "http://127.0.0.1:8000/"
+global.CLIENT_KEY = "ObUVtdnDjNAfU9LfECkstscv7GjKv2QqANCLhAUe"
 
 function createWindow () {
     // Create the browser window.
@@ -30,7 +30,7 @@ function createWindow () {
     }))
 
     // Open the DevTools.
-    // mainWindow.webContents.openDevTools()
+    //mainWindow.webContents.openDevTools()
 
     // Emitted when the window is closed.
     mainWindow.on('closed', function () {
@@ -52,7 +52,3 @@ app.on('activate', function () {
         createWindow()
     }
 })
-
-ipcMain.on( "setUser", ( event, userValue ) => {
-    global.user = userValue;
-} );

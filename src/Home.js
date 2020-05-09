@@ -16,7 +16,7 @@ var home_page = heredoc.strip(function() {/*
         </div>
         <div class="right-sidebar">
             <div id="current">
-                <div class="task"></div>
+                <div class="activity"></div>
                 <div class="timer">
                     <span id="time">00:00:00</span>
                     <button type="button" disabled class="btn-start">Start</button>
@@ -24,7 +24,7 @@ var home_page = heredoc.strip(function() {/*
                     <button type="button" disabled class="btn-stop">Stop</button>
                 </div>
             </div>
-            <div id="tasks">
+            <div id="activities">
             </div>
         </div>
     </div>
