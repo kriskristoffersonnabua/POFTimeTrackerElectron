@@ -3,7 +3,113 @@
     <head>
         <meta charset="UTF-8">
         <title>POF Time Tracker</title>
-        <link rel="stylesheet" type="text/css" href="./assets/style.css">
+        <!-- <link rel="stylesheet" type="text/css" href="./assets/style.css"> -->
+
+        <!---- Bootstrap ---->        
+        <link rel="stylesheet" type="text/css" href="./node_modules/gentelella/vendors/bootstrap/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="./node_modules/gentelella/vendors/nprogress/nprogress.css">
+        <link rel="stylesheet" type="text/css" href="./node_modules/gentelella/vendors/iCheck/skins/flat/green.css">
+        <link rel="stylesheet" type="text/css" href="./node_modules/gentelella/vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css">
+        <link rel="stylesheet" type="text/css" href="./node_modules/gentelella/vendors/jqvmap/dist/jqvmap.min.css">
+        <link rel="stylesheet" type="text/css" href="./node_modules/gentelella/vendors/bootstrap-daterangepicker/daterangepicker.css">
+        <link rel="stylesheet" type="text/css" href="./node_modules/gentelella/build/css/custom.min.css">
+
+        <!---- Font ---->
+        <link rel="stylesheet" type="text/css" href="./node_modules/gentelella/vendors/font-awesome/css/font-awesome.min.css">
+
+        <!---- Gentelella ---->
+        <link rel="stylesheet" type="text/css" href="./node_modules/gentelella/build/css/custom.min.css">
+
+        <!---- Datatables ---->
+        <link rel="stylesheet" type="text/css" href="./node_modules/gentelella/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="./node_modules/gentelella/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="./node_modules/gentelella/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css">
+        
+        <!---- Switchery ---->
+        <link rel="stylesheet" type="text/css" href="./node_modules/gentelella/vendors/switchery/dist/switchery.min.css">
+    
+        <style>
+            html, body {
+                background-color: #fff;
+                /* color: #73879C; */
+                font-family: 'Raleway', sans-serif;
+                font-weight: 100;
+                height: 100vh;
+                margin: 0;
+            }
+
+            .full-height {
+                height: 100vh;
+            }
+
+            .flex-center {
+                align-items: center;
+                display: flex;
+                justify-content: center;
+            }
+
+            .position-ref {
+                position: relative;
+            }
+
+            .top-right {
+                position: absolute;
+                right: 10px;
+                top: 18px;
+            }
+
+            .content {
+                text-align: center;
+            }
+
+            .title {
+                font-size: 84px;
+            }
+
+            .links > a {
+                color: #636b6f;
+                padding: 0 25px;
+                font-size: 12px;
+                font-weight: 600;
+                letter-spacing: .1rem;
+                text-decoration: none;
+                text-transform: uppercase;
+            }
+
+            .footer {
+                position:fixed;
+                width:100%;
+                height:20px;
+                padding:5px;
+                bottom:0px;
+                font-size: smaller;
+            }
+
+            .m-b-md {
+                margin-bottom: 30px;
+            }
+            
+            .login_content h1:before, .login_content h1:after {
+                content: "";
+                height: 1px;
+                position: absolute;
+                top: 45px;
+                width: 20%;
+            }
+
+            .separator{
+                border-top:1px solid #7e7e7e
+            }
+
+            .my-custom-scrollbar {
+                position: relative;
+                height: 600px;
+                overflow: auto;
+            }
+            .table-wrapper-scroll-y {
+                display: block;
+            }
+        </style>
     </head>
     <body>
         <div id="root"></div>
@@ -12,4 +118,10 @@
         // You can also require other files to run in this process
         require('./renderer.js')
     </script>
+
+    <script src="./node_modules/gentelella/vendors/jquery/dist/jquery.min.js"></script>
+    <script src="./node_modules/gentelella/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="./node_modules/gentelella/vendors/fastclick/lib/fastclick.js"></script>
+    <script src="./node_modules/gentelella/vendors/nprogress/nprogress.js"></script>
+    <script src="./node_modules/gentelella/build/js/custom.min.js"></script>
 </html>

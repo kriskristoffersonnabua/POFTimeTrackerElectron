@@ -22,6 +22,7 @@ const displayTasks = function ( activitys ) {
 var activity_container = heredoc.strip(function() {/*
     <div>
         <ul>
+         <h1>Acticiasdfas</h1>
             %activity_list%
         </ul>
     </div>
@@ -41,6 +42,7 @@ const displayCurrentTask = function( activity ) {
 }
 
 var current_activity = heredoc.strip(function() {/*
+    <h1> Activity </h1>
     <span>%activity_no%</span>
     <span>%title%</span>
 */})

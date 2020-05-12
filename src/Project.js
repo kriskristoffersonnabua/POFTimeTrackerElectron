@@ -39,11 +39,44 @@ const displaySubProjects = function ( subprojects, project_id ) {
 
 
 var project_container = heredoc.strip(function() {/*
+
+    <div id="sidebar-menu" class="main_menu_side hidden-print main_menu" style="height: 600px">
+        <div class="menu_section">
+            <ul class="nav side-menu show" id="project_list">
+                <li class="active">
+                    <a><i class="fa fa-book"></i> Project 1 <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                        <li><a href="#">Sub Project 1</a></li>
+                        <li><a href="#">Sub Project 2</a></li>
+                        <li><a href="#">Sub Project 3</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a><i class="fa fa-book"></i> Project 2 <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                        <li><a href="#">Sub Project 1</a></li>
+                        <li><a href="#">Sub Project 2</a></li>
+                        <li><a href="#">Sub Project 3</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a><i class="fa fa-book"></i> Project 3 <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                        <li><a href="#">Sub Project 1</a></li>
+                        <li><a href="#">Sub Project 2</a></li>
+                        <li><a href="#">Sub Project 3</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!---- original code
     <div>
         <ul id="project_list">
             %project_list%
         </ul>
-    </div>
+    </div> ----!>
 */})
 
 var each_project = heredoc.strip(function() {/*

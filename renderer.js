@@ -32,7 +32,7 @@ $(document).ready(function() {
         e.preventDefault();
 
         $(this).find('button').prop('disabled', true );
-        $(this).find('span').css('display', 'block' );
+        $(this).find('span').css('display', 'inline-flex' );
 
         fetch(API_URL + 'api/login', {
             method: 'post',
