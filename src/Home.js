@@ -10,63 +10,58 @@ var home_page = heredoc.strip(function() {/*
     
     <div class="container body">
         <div class="main_container">
-            <div class="col-md-3 left_col">
-                <div class="left_col scroll-view">
-                    <div class="navbar nav_title" style="margin-top: 20px; margin-left: 0px">
-                        <a href="#" class="site_title">
-                            <img src="assets/img/logo-small.png" alt="..." class="img-circle profile_img" style="width: 30px; height: 30px; padding: 0px; margin: 0px"> 
-                            <span>POF Time Tracker</span>
+            <div class="col-md-3 left_col" style="padding:0px">
+                <div class="left_col scroll-view" >
+                    <div class="navbar nav_title" >
+                        <a href="#" class="site_title" id="user_info">
+                            <img src="assets/img/logo.png" alt="..." style="height: 50px; padding: 0px; margin: 0px;">
                         </a>
                     </div>
 
                     <div class="clearfix"></div>
-
                     </br>
-                    
                     <div id="projects"> </div> 
+                    <br/>
+                    <div class="sidebar-footer hidden-small">
+                        <a data-toggle="tooltip" data-placement="top" class="logout" data-original-title="Logout">
+                            <span class="txt">LOG OUT</span> 
+                            <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                        </a>
+                    </div>
                 </div>
             </div>
 
             <!-- top navigation -->
-            <div class="top_nav" style="padding-left: 20px;">
-                <div class="nav_menu">
+            <div class="top_nav">
+                <div class="nav_menu" style="padding-left:20px" id="current">
                     <nav>
-                    <div class="nav toggle" style="margin-left: 0px">
-                        <a id="menu_toggle"><i class="fa fa-bars"></i></a>
-                    </div>
 
                     <div class="timer nav navbar-nav" style="margin-left: 0px; padding-left: 0px">
                         <h1 id="time">00:00:00</h1>
-                        <h5> Design Web App </h5>
+                        <h5 class="activity"></h5>
                     </div>
 
-                    <ul class="nav navbar-nav navbar-right" style="width: 300px">
-                    
-                        <li class="" style="margin: 10px 0px 10px 0px">
-                            <!--- <div id="user_info" style="margin: 10px 0px 10px 0px"></div> --->
-                            <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                <img src="assets/img/logo-small.png" style="width: 30px; height: 30px; margin-right: 10px;" alt="">John Doe
-                                <span class=" fa fa-angle-down"></span>
-                            </a>
-                            <ul class="dropdown-menu dropdown-usermenu pull-right">
-                                <li><a href="login.html"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
-                            </ul> 
-                        </li>
-
+                    <ul class="nav navbar-nav navbar-right" style="width: 300px; padding-right: 10px">
                         <div class="timer">
                             <li>
-                                <div style="margin: 10px">
-                                    <h1><a><i class="fa fa-stop"></i></a></h1>
+                                <div style="margin-top: 10px">
+                                    <button type="button" disabled class="btn-stop btn">
+                                        <i class="fa fa-stop text-danger "></i>
+                                    </button>
                                 </div>
                             </li>
                             <li>
-                                <div style="margin: 10px">
-                                    <h1><a><i class="fa fa-pause"></i></a></h1>
+                                <div style="margin-top: 10px">
+                                    <button type="button" disabled class="btn-pause btn">
+                                        <i class="fa fa-pause text-primary"></i>
+                                    </button>
                                 </div>
                             </li>
                             <li>   
-                                <div style="margin: 10px">
-                                    <h1><a><i class="fa fa-play"></i></a></h1>
+                                <div style="margin-top: 10px">
+                                    <button type="button" disabled class="btn-start btn">
+                                        <i class="fa fa-play text-success"></i>
+                                    </button>
                                 </div>
                             </li>
                         </div>
@@ -79,34 +74,10 @@ var home_page = heredoc.strip(function() {/*
             <!---- Top Nav ---->
 
             <!---- Page Content ---->
-
             
             <div class="right_col" role="main">
                 <div class="">
-                    <div class="table-wrapper-scroll-y my-custom-scrollbar" style="width: 525px">
-                        <table id="datatable" class="table table-striped projects">
-                            <thead>
-                                <tr>
-                                    <th class="th-sm" style="width: 50%"> Title </th>
-                                    <th class="th-sm">Links</th>
-                                    <th class="th-sm" style="width: 20%">Time Consumed</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td> Activity Title </td>
-                                    <td>
-                                        <a href="#" class="btn btn-primary btn-xs" data-toggle="modal" data-target=".view-modal">
-                                            <i class="fa fa-folder"></i> View 
-                                        </a>
-                                        <a href="#" class="btn btn-success btn-xs">
-                                            <i class="fa fa-thumbs-up"></i> Done
-                                        </a>
-                                    </td>
-                                    <td> 8hrs 30min </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="table-wrapper-scroll-y my-custom-scrollbar" id="activities" >
                     </div>
                 </div>
             </div>
@@ -235,35 +206,7 @@ var home_page = heredoc.strip(function() {/*
         </div>
     </div>
     
-    
-    <!---- End of Design
-    
-      
-    <div>
-        <div class="left-sidebar">
-            <div id="user_info">
-            </div><br/>
-            <div id="projects">
-            </div>
-        </div>
-
-
-        <div class="right-sidebar">
-            <div id="current">
-                <div class="activity"></div>
-                <div class="timer">
-                    <span id="time">00:00:00</span>
-                    <button type="button" disabled class="btn-start">Start</button>
-                    <button type="button" disabled class="btn-pause">Pause</button>
-                    <button type="button" disabled class="btn-stop">Stop</button>
-                </div>
-            </div>
-            <div id="activities">
-            </div>
-        </div>
-    </div> --->
-    
-    
+    <!---- End of Design --->
 */})
 
 

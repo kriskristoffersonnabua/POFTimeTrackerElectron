@@ -1,3 +1,5 @@
+'use strict';
+
 const electron = require('electron')
 const app = electron.app
 const ipcMain = electron.ipcMain
@@ -10,13 +12,12 @@ let mainWindow
 
 //set global variables 
 global.API_URL = "http://127.0.0.1:8000/"
-global.CLIENT_KEY = "ObUVtdnDjNAfU9LfECkstscv7GjKv2QqANCLhAUe"
 
 function createWindow () {
     // Create the browser window.
     mainWindow = new BrowserWindow({
         width: 800, 
-        height: 700,
+        height: 600,
         webPreferences: {
             nodeIntegration: true
         }
@@ -29,8 +30,10 @@ function createWindow () {
         slashes: true
     }))
 
+    mainWindow.setMenuBarVisibility(false);
+
     // Open the DevTools.
-    //mainWindow.webContents.openDevTools()
+    mainWindow.webContents.openDevTools()
 
     // Emitted when the window is closed.
     mainWindow.on('closed', function () {
@@ -38,7 +41,9 @@ function createWindow () {
     })
 }
 
-app.on('ready', createWindow)
+app.on('ready', () => {
+    createWindow()
+})
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {

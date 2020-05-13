@@ -20,16 +20,26 @@ const displayTasks = function ( activitys ) {
 }
 
 var activity_container = heredoc.strip(function() {/*
-    <div>
-        <ul>
-         <h1>Acticiasdfas</h1>
+    <table id="datatable" class="table projects">
+        <tbody >
             %activity_list%
-        </ul>
-    </div>
+        </tbody>
+    </table>
 */})
 
 var each_activity = heredoc.strip(function() {/*
-    <li data-list="activity" data-id="%activity_id%">%activity_no% - %activity_name%</li>
+    <tr data-list="activity" data-id="%activity_id%">
+        <td style="width: 55%">%activity_no% - %activity_name%</td>
+        <td><button class="btn btn-round btn-xs hrsMin">0hrs 0min</button></td>
+        <td>
+            <a href="#" class="btn btn-primary btn-xs" data-toggle="modal" data-target=".view-modal">
+                <i class="fa fa-folder"></i> View 
+            </a>
+            <a href="#" class="btn btn-success btn-xs">
+                <i class="fa fa-thumbs-up"></i> Done
+            </a>
+        </td>
+    </tr>
 */})
 
 
@@ -42,8 +52,7 @@ const displayCurrentTask = function( activity ) {
 }
 
 var current_activity = heredoc.strip(function() {/*
-    <h1> Activity </h1>
-    <span>%activity_no%</span>
+    <span>%activity_no%</span> -
     <span>%title%</span>
 */})
 

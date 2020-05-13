@@ -14,8 +14,10 @@ var login_form = heredoc.strip(function() {/*
         <form id="login_form">
             <div class="animate form login_form" >
                 <section class="login_content">
-                    <h1>Log in form</h1>
-                            
+
+                    <div class="h1"><img src="./assets/img/logo.png" width="200px"/></div>
+                    <!--<h1>EMPLOYEE LOGIN</h1>-->
+                    <br/>
                     <div style="margin-top: 5px; margin-bottom: 10px;">
                         <input id="email" type="email" class="form-control" name="email" value=""
                                        placeholder="E-Mail Address" required autofocus>
@@ -32,10 +34,11 @@ var login_form = heredoc.strip(function() {/*
                                            name="remember"> Remember Me
                         </label>
                     </div>
-                            
+                    <div>
+                        <span style="display: none">Logging in ... </span>
+                    </div>
                     <div style="padding-top: 10px">
                         <button class="btn btn-default submit" type="submit">Login</button>
-                        <span style="display: none">Logging in ... </span>
                         <a class="reset_pass" href="#">
                             Forgot your Password?
                         </a>
@@ -44,15 +47,9 @@ var login_form = heredoc.strip(function() {/*
                     <div class="clearfix"></div>
 
                     <div class="separator">
-                        <p class="change_link">Do not have an account?
-                            <a href="#" class="to_register"> Sign up </a>
-                        </p>
-
-                    <div class="clearfix"></div>
+                        <div class="clearfix"></div>
                         <br/>
-
-                    <div>
-                        <div class="h1">POF Time Tracker</div>
+                        <div>
                             <p>&copy; 2020 POF Time Tracker. All rights reserved</p>
                         </div>
                     </div>

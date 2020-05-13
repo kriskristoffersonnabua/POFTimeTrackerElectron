@@ -15,6 +15,10 @@ const activity = require('./src/Task.js')
 
 const API_URL = remote.getGlobal('API_URL')
 
+const Store = require('electron-store');
+ 
+const store = new Store();
+
 var current_activity_id = 0
 var time_history_id = 0
 var user_id = 0
@@ -26,41 +30,57 @@ var capture_timer
 
 $(document).ready(function() {
 
-    login.showLoginForm();
+    current_user = store.get('user_id');
+    current_access_token = store.get('access_token');
 
-    $("#login_form").submit( function(e) {
-        e.preventDefault();
+    if ( !current_user || current_user == '' ) {
+        login.showLoginForm();
 
-        $(this).find('button').prop('disabled', true );
-        $(this).find('span').css('display', 'inline-flex' );
+        $("#login_form").submit( function(e) {
+            e.preventDefault();
+    
+            $(this).find('button').prop('disabled', true );
+            $(this).find('span').css('display', 'inline-flex' );
+    
+            fetch(API_URL + 'api/login', {
+                method: 'post',
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    'email': $(this).find('[name="email"]').val(),
+                    'password': $(this).find('[name="password"]').val()
+                }) 
+            })
+            .then(res => res.json() )
+            .then(res => {
+                if( res.success ) {
+                    user_id = res.data.id
+                    access_token = res.data.access_token
+                    home.showHomePage()
+                    getUser()
+                    getAssignedProjects(user_id)
 
-        fetch(API_URL + 'api/login', {
-            method: 'post',
-            headers: {
-                'Accept': 'application/json, text/plain, */*',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                'email': $(this).find('[name="email"]').val(),
-                'password': $(this).find('[name="password"]').val()
-            }) 
-        })
-        .then(res => res.json() )
-        .then(res => {
-            if( res.success ) {
-                user_id = res.data.id
-                access_token = res.data.access_token
-                home.showHomePage()
-                getUser()
-                getAssignedProjects(user_id)
-            } else {
-                alert( res.message )
-                $(this).find('button').prop('disabled', false );
-                $(this).find('span').css('display', 'none' );
-            }
-
+                    store.set('user_id', user_id)
+                    store.set('access_token', access_token)
+                } else {
+                    alert( res.message )
+                    $(this).find('button').prop('disabled', false );
+                    $(this).find('span').css('display', 'none' );
+                }
+    
+            });
         });
-    });
+    } else {
+        user_id = current_user
+        access_token = current_access_token
+        home.showHomePage()
+        getUser()
+        getAssignedProjects(user_id)
+    }
+
+    
 });
 
 function getUser() {
@@ -104,9 +124,12 @@ function getAssignedProjects( user_id ) {
             alert( res.message )
         }
 
-        $('[data-list="project"] span').click( function() {
+        $('[data-list="project"] a').click( function() {
+            $('[data-list="project"]').removeClass('active');
+            $( this ).parent('li').addClass('active');
             let project_id = $(this).parent('li').data('id')
             getSubProjects( project_id );
+            $( this ).parent('li').find('.subprojects').toggle();
         })
     });
 }
@@ -191,15 +214,29 @@ function getActivityInfo( activity_id ) {
             activity.displayCurrentTask( res.data );
             current_activity_id = activity_id
             $('.btn-start').prop('disabled', false);
-
+            $('.btn-start').off('click');
             $('.btn-start').click( function() {
                 if( timer_status == 'stop' ) {
                     total_seconds = 0
                 }
                 timer_status = 'start'
-                createActivity()
+                createActivity();
+
+                timer = setInterval(() => {
+                    timerTick();
+                }, 1000);
+
+                capture_timer = setInterval(() => {
+                    captureScreen();
+                    updateActivity();
+                }, 900000);
+
+                $('.btn-stop').prop('disabled', false)
+                $('.btn-pause').prop('disabled', false)
+                $('.btn-start').prop('disabled', true)
             })
 
+            $('.btn-stop').off('click');
             $('.btn-stop').click( function() {
                 timer_status = 'stop'
                 updateActivity()
@@ -209,6 +246,7 @@ function getActivityInfo( activity_id ) {
                 $('.btn-start').prop('disabled', false)
             })
 
+            $('.btn-pause').off('click');
             $('.btn-pause').click( function() {
                 timer_status = 'pause'
                 updateActivity()
@@ -223,8 +261,8 @@ function getActivityInfo( activity_id ) {
     });
 }
 
-function createActivity() {
-    fetch(API_URL + 'api/time-history', {
+async function createActivity() {
+    await fetch(API_URL + 'api/time-history', {
         method: 'post',
         headers: {
             'Accept': 'application/json, text/plain, */*',
@@ -251,21 +289,6 @@ function createActivity() {
                     if( err ) console.log( err )
                 });
             }
-
-            timer = setInterval(() => {
-                timerTick();
-            }, 1000);
-
-            capture_timer = setInterval(() => {
-                let date_ = new Date();
-                screenshot({ filename: path.join(__dirname, 'screenshots', 'act_' + time_history_id , date_.getTime() + ".png") })
-
-                updateActivity();
-            }, 900000);
-
-            $('.btn-stop').prop('disabled', false)
-            $('.btn-pause').prop('disabled', false)
-            $('.btn-start').prop('disabled', true)
         } else {
             alert( res.message )
         }
@@ -273,31 +296,36 @@ function createActivity() {
 }
 
 function updateActivity() {
-    let time_consumed = 0;
+    let time_consumed = $("#time").text();
+
+    var api_url = url.format({ query: { 'time_consumed' : time_consumed } })
 
     fetch(API_URL + 'api/time-history/' + time_history_id, {
-        method: 'post',
+        method: 'PATCH',
+        _method: 'PATCH',
+        crossDomain: true,
+        xhrFields: {
+            withCredentials: true
+        },
         headers: {
-            'Accept': 'application/json, text/plain, */*',
-            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            'Content-Type':'application/x-www-form-urlencoded',
             'Authorization': 'Bearer ' + access_token,
         },
-        body: JSON.stringify({
-            'time_consumed': time_consumed
-        }) 
+        body: "time_consumed=" + time_consumed,
+        credentials: 'include'
     })
-    .then(res => console.log(res))
+    .then(res => res.json())
     .then(res => {
-
-        if(res.success) {
-            uploadScreenShots()
-        } else {
-            alert( res.message )
-        }
-    });
+        console.log(res)
+        let hrs = parseFloat(time_consumed.substr(0,2)).toString();
+        let min = parseFloat(time_consumed.substr(3,2)).toString();
+        $('[data-id="' + current_activity_id + '"]').find( '.hrsMin' ).text(hrs + 'hrs ' + min + 'min');
+    })
+    .catch(err => console.error(err))
 }
 
-function uploadScreenShots() {
+function uploadScreenShots( screenshot ) {
 
     let activity_folder = path.join(__dirname, 'screenshots', 'act_' + activity_id )
 
@@ -318,8 +346,14 @@ function uploadScreenShots() {
     });
 }
 
+function captureScreen() {
+    let date_ = new Date();
+    screenshot({ filename: path.join(__dirname, 'screenshots', 'act_' + time_history_id , date_.getTime() + ".png") })
+}
+
 function timerTick() {
-    ++total_seconds;
+    // ++total_seconds;
+    total_seconds = total_seconds + 60;
     let current_time = (
         pad(parseInt(total_seconds / 60 / 60)) + ':' +
         pad(parseInt(total_seconds / 60)) + ':' +
