@@ -11,6 +11,7 @@ const displayTasks = function ( activitys ) {
                 .replace('%activity_id%', activity['id'])
                 .replace('%activity_no%', activity['activity_no'])
                 .replace('%activity_name%', activity['title'])
+                .replace('%done_activity%', ( activity['status'] == "ongoing" ? doneActivity : "" ))
         )
     })
 
@@ -35,12 +36,16 @@ var each_activity = heredoc.strip(function() {/*
             <a href="#" class="btn btn-primary btn-xs" data-toggle="modal" data-target=".view-modal">
                 <i class="fa fa-folder"></i> View 
             </a>
-            <a href="#" class="btn btn-success btn-xs">
-                <i class="fa fa-thumbs-up"></i> Done
-            </a>
+            %done_activity%
         </td>
     </tr>
 */})
+
+var doneActivity = heredoc.strip(function() {/*
+    <a href="#" class="btn btn-success btn-done btn-xs">
+        <i class="fa fa-thumbs-up"></i> Done
+    </a>
+ */});
 
 
 const displayCurrentTask = function( activity ) {

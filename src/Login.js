@@ -50,7 +50,7 @@ var login_form = heredoc.strip(function() {/*
                         <div class="clearfix"></div>
                         <br/>
                         <div>
-                            <p>&copy; 2020 POF Time Tracker. All rights reserved</p>
+                            <p>&copy; 2020 POFTimeTracker. All rights reserved</p>
                         </div>
                     </div>
 

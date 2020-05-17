@@ -21,6 +21,7 @@ const store = new Store();
 
 var current_activity_id = 0
 var time_history_id = 0
+var current_subproject_id = 0
 var user_id = 0
 var access_token = ''
 var timer_status = 'stop'
@@ -80,7 +81,9 @@ $(document).ready(function() {
         getAssignedProjects(user_id)
     }
 
-    
+    $('.logout').click(function(){
+        logout();
+    })
 });
 
 function getUser() {
@@ -182,6 +185,7 @@ function getSubProjectActivities( subproject_id ) {
         console.log(res)
 
         if( res.success ) {
+            current_subproject_id = subproject_id
             activity.displayTasks( res.data );
         } else {
             alert( res.message )
@@ -193,6 +197,11 @@ function getSubProjectActivities( subproject_id ) {
                 getActivityInfo( activity_id );
             }
         })
+
+        $('.btn-done').click(function(){
+            let activity_id = $(this).parent('td').parent('tr').data('id');
+            setActivity(activity_id, 'done')
+        });
     });
 }
 
@@ -287,6 +296,8 @@ async function createActivity() {
             if (!fs.existsSync(activity_folder)) { 
                 fs.mkdir(activity_folder, function(err, data) {
                     if( err ) console.log( err )
+                    setActivity( current_activity_id, 'ongoing' );
+                    captureScreen()
                 });
             }
         } else {
@@ -297,8 +308,6 @@ async function createActivity() {
 
 function updateActivity() {
     let time_consumed = $("#time").text();
-
-    var api_url = url.format({ query: { 'time_consumed' : time_consumed } })
 
     fetch(API_URL + 'api/time-history/' + time_history_id, {
         method: 'PATCH',
@@ -325,38 +334,68 @@ function updateActivity() {
     .catch(err => console.error(err))
 }
 
-function uploadScreenShots( screenshot ) {
-
-    let activity_folder = path.join(__dirname, 'screenshots', 'act_' + activity_id )
-
-    fs.readDir(activity_folder, function(dir) {
-        // es6
-        for(let filePath of dir) {
-          
-            // superagent
-            //     .get(API_URL + 'api/upload_screenshot')
-            //     .send('activity_id', activity_id ) // sends a JSON post body
-            //     .attach('screenshot', filePath )
-            //     .set('accept', 'json')
-            //     .end(function (err, res) {
-                    
-            // });
-
-        }
-    });
-}
-
 function captureScreen() {
     let date_ = new Date();
-    screenshot({ filename: path.join(__dirname, 'screenshots', 'act_' + time_history_id , date_.getTime() + ".png") })
+
+    let filename_ = path.join(__dirname, 'screenshots', 'act_' + time_history_id , date_.getTime() + ".png");
+    // screenshot({ filename: filename_ })
+
+    screenshot({format: 'png'}).then((img) => {
+        
+        const formData = new FormData();
+
+        formData.append('screenshot', img);
+        formData.append('time_history_id', time_history_id);
+
+        fetch(API_URL + 'api/time-history/' + time_history_id + '/add-screenshot', {
+            method: 'post',
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Authorization': 'Bearer ' + access_token,
+            },
+            body: formData
+        })
+        .then(res => res.json())
+        .then(res => {
+            console.log(res)
+        });
+    }).catch((err) => {
+        console.log(err)
+    })
+}
+
+function setActivity( activity_id, status ) {
+
+    fetch(API_URL + 'api/activity/' + activity_id, {
+        method: 'PATCH',
+        _method: 'PATCH',
+        crossDomain: true,
+        xhrFields: {
+            withCredentials: true
+        },
+        headers: {
+            Accept: 'application/json',
+            'Content-Type':'application/x-www-form-urlencoded',
+            'Authorization': 'Bearer ' + access_token,
+        },
+        body: "status=" + status,
+        credentials: 'include'
+    })
+    .then(res => res.json())
+    .then(res => {
+        console.log(res)
+
+        getSubProjectActivities(current_subproject_id)
+    })
+    .catch(err => console.error(err))
 }
 
 function timerTick() {
-    // ++total_seconds;
-    total_seconds = total_seconds + 60;
+    ++total_seconds;
+    // total_seconds = total_seconds + 120;
     let current_time = (
         pad(parseInt(total_seconds / 60 / 60)) + ':' +
-        pad(parseInt(total_seconds / 60)) + ':' +
+        pad((parseInt(total_seconds / 60)) % 60) + ':' +
         pad(total_seconds % 60)
     )
 
@@ -370,4 +409,10 @@ function pad(val) {
     } else {
       return valString;
     }
+}
+
+function logout() {
+    store.set('user_id', '');
+    store.set('access_token', '');
+    login.showLoginForm();
 }
