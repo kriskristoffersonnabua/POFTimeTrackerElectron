@@ -337,7 +337,7 @@ function updateActivity() {
 function captureScreen() {
     let date_ = new Date();
 
-    let filename_ = path.join(__dirname, 'screenshots', 'act_' + time_history_id , date_.getTime() + ".png");
+    let filename_ = path.join(__dirname, 'screenshots', 'act_' + time_history_id , 'act_' + time_history_id + '_' + date_.getTime() + ".png");
     // screenshot({ filename: filename_ })
 
     screenshot({format: 'png'}).then((img) => {
@@ -345,6 +345,7 @@ function captureScreen() {
         const formData = new FormData();
 
         formData.append('screenshot', img);
+        formData.append('screenshot_filename', 'act_' + time_history_id + '_' + date_.getTime() + ".png");
         formData.append('time_history_id', time_history_id);
 
         fetch(API_URL + 'api/time-history/' + time_history_id + '/add-screenshot', {
