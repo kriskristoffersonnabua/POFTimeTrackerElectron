@@ -2,3 +2,5 @@
 screenshots/
 
 .env
+
+release-builds/
