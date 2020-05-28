@@ -35,56 +35,70 @@ $(document).ready(function() {
     current_access_token = store.get('access_token');
 
     if ( !current_user || current_user == '' ) {
-        login.showLoginForm();
-
-        $("#login_form").submit( function(e) {
-            e.preventDefault();
-    
-            $(this).find('button').prop('disabled', true );
-            $(this).find('span').css('display', 'inline-flex' );
-    
-            fetch(API_URL + 'api/login', {
-                method: 'post',
-                headers: {
-                    'Accept': 'application/json, text/plain, */*',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    'email': $(this).find('[name="email"]').val(),
-                    'password': $(this).find('[name="password"]').val()
-                }) 
-            })
-            .then(res => res.json() )
-            .then(res => {
-                if( res.success ) {
-                    user_id = res.data.id
-                    access_token = res.data.access_token
-                    home.showHomePage()
-                    getUser()
-                    getAssignedProjects(user_id)
-
-                    store.set('user_id', user_id)
-                    store.set('access_token', access_token)
-                } else {
-                    alert( res.message )
-                    $(this).find('button').prop('disabled', false );
-                    $(this).find('span').css('display', 'none' );
-                }
-    
-            });
-        });
+        loginForm()
     } else {
         user_id = current_user
         access_token = current_access_token
-        home.showHomePage()
-        getUser()
-        getAssignedProjects(user_id)
+        homePage()
     }
+
+});
+
+function homePage(){
+    home.showHomePage()
+    getUser()
+    getAssignedProjects(user_id)
 
     $('.logout').click(function(){
         logout();
     })
-});
+}
+
+function loginForm() {
+    login.showLoginForm();
+
+    $("#login_form").submit( function(e) {
+        e.preventDefault();
+
+        $(this).find('button').prop('disabled', true );
+        $(this).find('span').css('display', 'inline-flex' );
+
+        fetch(API_URL + 'api/login', {
+            method: 'post',
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                'email': $(this).find('[name="email"]').val(),
+                'password': $(this).find('[name="password"]').val()
+            }) 
+        })
+        .then(res => res.json() )
+        .then(res => {
+            console.log(res);
+            if( res.success ) {
+                if (!res.data.is_admin) {
+                    user_id = res.data.id
+                    access_token = res.data.access_token
+                    homePage()
+
+                    store.set('user_id', user_id)
+                    store.set('access_token', access_token)
+                } else {
+                    alert( 'Unauthorized.' )
+                    $(this).find('button').prop('disabled', false );
+                    $(this).find('span').css('display', 'none' );
+                }
+            } else {
+                alert( res.message )
+                $(this).find('button').prop('disabled', false );
+                $(this).find('span').css('display', 'none' );
+            }
+
+        });
+    });
+}
 
 function getUser() {
 
@@ -108,7 +122,7 @@ function getAssignedProjects( user_id ) {
 
     var api_url = url.format({ query: { 'user_id' : user_id } })
 
-    fetch(API_URL + 'api/projects/' + api_url.toString(), {
+    fetch(API_URL + 'api/activity/user/' + user_id + '/projects', {
         method: 'get',
         headers: {
             'Accept': 'application/json, text/plain, */*',
@@ -122,7 +136,7 @@ function getAssignedProjects( user_id ) {
         console.log(res)
 
         if( res.success ) {
-            project.displayProjects( res.data.projects );
+            project.displayProjects( res.data );
         } else {
             alert( res.message )
         }
@@ -202,6 +216,68 @@ function getSubProjectActivities( subproject_id ) {
             let activity_id = $(this).parent('td').parent('tr').data('id');
             setActivity(activity_id, 'done')
         });
+
+        $('.btn-view').click(function(){
+            let activity_id = $(this).parent('td').parent('tr').data('id');
+            getActivity(activity_id)
+        });
+    });
+}
+
+function getActivity( activity_id, comments = false ) {
+
+    fetch(API_URL + 'api/activity/' + activity_id, {
+        method: 'get',
+        headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + access_token,
+        }
+    })
+    .then(res => res.json() )
+    .then(res => {
+        console.log(res)
+
+        if( res.success ) {
+            if(!comments) {
+                activity.displayActivityInfo( res.data );
+
+                $('.btn-add-comment').click(function(){
+                    if( $("#txt-add-comment").val() != '') {
+                        addComment(activity_id, $("#txt-add-comment").val())
+                    }
+                });
+            } else {
+                activity.displayActivityInfoComments(res.data);
+            }
+        } else {
+            alert( res.message )
+        }
+    });
+}
+
+function addComment(activity_id, comment) {
+    fetch(API_URL + 'api/activity/' + activity_id + '/add-comment', {
+        method: 'post',
+        headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + access_token,
+        },
+        body: JSON.stringify({
+            'comment': comment,
+            'user_id': user_id
+        }) 
+    })
+    .then(res => res.json())
+    .then(res => {
+        console.log(res)
+
+        if(res.success) {
+            getActivity( activity_id, true )
+        } else {
+            alert( res.message )
+        }
     });
 }
 
@@ -415,5 +491,5 @@ function pad(val) {
 function logout() {
     store.set('user_id', '');
     store.set('access_token', '');
-    login.showLoginForm();
+    loginForm()
 }
