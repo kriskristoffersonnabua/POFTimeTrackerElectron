@@ -369,13 +369,13 @@ async function createActivity() {
 
             let activity_folder = path.join(__dirname, 'screenshots', 'act_' + time_history_id)
 
-            if (!fs.existsSync(activity_folder)) { 
-                fs.mkdir(activity_folder, function(err, data) {
-                    if( err ) console.log( err )
+            // if (!fs.existsSync(activity_folder)) { 
+            //     fs.mkdir(activity_folder, function(err, data) {
+            //         if( err ) console.log( err )
                     setActivity( current_activity_id, 'ongoing' );
                     captureScreen()
-                });
-            }
+            //     });
+            // }
         } else {
             alert( res.message )
         }
@@ -420,15 +420,14 @@ function captureScreen() {
         
         const formData = new FormData();
 
-        formData.append('screenshot', img);
-        formData.append('screenshot_filename', 'act_' + time_history_id + '_' + date_.getTime() + ".png");
-        formData.append('time_history_id', time_history_id);
+        formData.append('screenshot', new Blob([img], {type: "image/png"} ), 'act_' + time_history_id + '_' + date_.getTime() + ".png");
 
         fetch(API_URL + 'api/time-history/' + time_history_id + '/add-screenshot', {
             method: 'post',
             headers: {
-                'Accept': 'application/json, text/plain, */*',
+                // 'Accept': 'application/json, text/plain, */*',
                 'Authorization': 'Bearer ' + access_token,
+                // 'Content-Type' : 'multipart/form-data'
             },
             body: formData
         })
