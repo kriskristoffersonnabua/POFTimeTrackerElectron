@@ -52,7 +52,6 @@ var project_container = heredoc.strip(function() {/*
 var each_project = heredoc.strip(function() {/*
     <li class="each_project" data-list="project" data-id="%project_id%">
         <a>
-            <i class="fa fa-book"></i>
             %project_no% - %project_name% 
             <span class="fa fa-chevron-down"></span>
         </a>
