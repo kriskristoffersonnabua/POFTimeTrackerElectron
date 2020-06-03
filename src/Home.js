@@ -10,7 +10,7 @@ var home_page = heredoc.strip(function() {/*
     
     <div class="container body">
         <div class="main_container">
-            <div class="col-md-3 left_col" style="padding:0px">
+            <div class="col-md-3 left_col" style="padding:0px; width:230px">
                 <div class="left_col scroll-view" >
                     <div class="navbar nav_title" >
                         <a href="#" class="site_title" id="user_info">
@@ -32,8 +32,8 @@ var home_page = heredoc.strip(function() {/*
             </div>
 
             <!-- top navigation -->
-            <div class="top_nav">
-                <div class="nav_menu" style="padding-left:20px" id="current">
+            <div class="top_nav" style="margin-left: 230px" >
+                <div class="nav_menu" style="padding-left:20px;" id="current">
                     <nav>
 
                     <div class="timer nav navbar-nav" style="margin-left: 0px; padding-left: 0px">

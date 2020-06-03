@@ -53,7 +53,6 @@ var each_project = heredoc.strip(function() {/*
     <li class="each_project" data-list="project" data-id="%project_id%">
         <a>
             %project_no% - %project_name% 
-            <span class="fa fa-chevron-down"></span>
         </a>
         <ul class="nav child_menu subprojects"></ul>
     </li>

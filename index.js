@@ -18,7 +18,7 @@ global.API_URL = process.env.API_URL
 function createWindow () {
     // Create the browser window.
     mainWindow = new BrowserWindow({
-        width: 800, 
+        width: 900, 
         height: 600,
         webPreferences: {
             nodeIntegration: true

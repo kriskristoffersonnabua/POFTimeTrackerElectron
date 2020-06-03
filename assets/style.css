@@ -6,34 +6,6 @@ html, body {
     margin: 0;
 }
 
-.full-height {
-    height: 100vh;
-}
-
-.flex-center {
-    align-items: center;
-    display: flex;
-    justify-content: center;
-}
-
-.position-ref {
-    position: relative;
-}
-
-.top-right {
-    position: absolute;
-    right: 10px;
-    top: 18px;
-}
-
-.content {
-    text-align: center;
-}
-
-.title {
-    font-size: 84px;
-}
-
 .links > a {
     color: #636b6f;
     padding: 0 25px;
@@ -42,27 +14,6 @@ html, body {
     letter-spacing: .1rem;
     text-decoration: none;
     text-transform: uppercase;
-}
-
-.footer {
-    position:fixed;
-    width:100%;
-    height:20px;
-    padding:5px;
-    bottom:0px;
-    font-size: smaller;
-}
-
-.m-b-md {
-    margin-bottom: 30px;
-}
-
-.login_content h1:before, .login_content h1:after {
-    content: "";
-    height: 1px;
-    position: absolute;
-    top: 45px;
-    width: 20%;
 }
 
 .separator{
@@ -74,7 +25,6 @@ html, body {
     overflow: auto;
     padding: 5px 10px;
     margin-right: 0px;
-    width: 560px;
 }
 .table-wrapper-scroll-y {
     display: block;
@@ -106,6 +56,10 @@ html, body {
 
 .each_project:hover {
     background-color: #172D44;
+}
+
+.each_project a {
+    font-size: 12px !important;
 }
 
 .subprojects li {

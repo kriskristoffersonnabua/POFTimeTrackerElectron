@@ -303,9 +303,9 @@ function getActivityInfo( activity_id ) {
             $('.btn-start').click( function() {
                 if( timer_status == 'stop' ) {
                     total_seconds = 0
+                    createActivity();
                 }
                 timer_status = 'start'
-                createActivity();
 
                 timer = setInterval(() => {
                     timerTick();
