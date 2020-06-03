@@ -5,15 +5,13 @@ const app = electron.app
 const ipcMain = electron.ipcMain
 const BrowserWindow = electron.BrowserWindow
 
-require('dotenv').config()
-
 const path = require('path')
 const url = require('url')
 
 let mainWindow
 
 //set global variables 
-global.API_URL = process.env.API_URL
+global.API_URL = 'http://127.0.0.1:8000/'
 
 function createWindow () {
     // Create the browser window.
